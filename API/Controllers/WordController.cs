@@ -22,13 +22,46 @@ namespace API.Controllers
             this.wordServices = wordServices;
         }
         [HttpGet("[Action]")]
-        public IActionResult GetAll(int? page, int? pageSize)
+        public IActionResult GetAll()
+        {
+            var result = wordServices.GetAll()
+                                      .OrderByDescending(x => x.Id);                                      
+            return Ok(new ResponseAPIPaging
+            {
+                StatusCode = Ok().StatusCode,
+                IsSuccess = true,
+                Data = result,                
+            });
+        }
+        [HttpGet("[Action]")]
+        public IActionResult GetAllPaging(int? page, int? pageSize)
         {
             if (!page.HasValue)
                 page = 1;
             if (!pageSize.HasValue)
                 pageSize = PagingConfig.PageSize;
             var result = wordServices.GetAll()
+                                      .OrderByDescending(x => x.Id)
+                                      .ToPagedList(page.Value, pageSize.Value);
+            return Ok(new ResponseAPIPaging
+            {
+                StatusCode = Ok().StatusCode,
+                IsSuccess = true,
+                Data = result,
+                PageCount = result.PageCount,
+                PageSize = pageSize.Value,
+                PageNumber = result.PageNumber,
+                TotalItems = result.TotalItemCount
+            });
+        }
+        [HttpGet("[Action]")]
+        public IActionResult GetWordsByTopicId(int topicId,int? page, int? pageSize)
+        {
+            if (!page.HasValue)
+                page = 1;
+            if (!pageSize.HasValue)
+                pageSize = PagingConfig.PageSize;
+            var result = wordServices.GetWordsByTopicId(topicId)
                                       .OrderByDescending(x => x.Id)
                                       .ToPagedList(page.Value, pageSize.Value);
             return Ok(new ResponseAPIPaging
@@ -63,7 +96,7 @@ namespace API.Controllers
                 TotalItems = result.TotalItemCount
             });
         }
-        [HttpPost("Action")]
+        [HttpPost("[Action]")]
         public async Task<IActionResult> Insert(WordModel model)
         {
             var result = await wordServices.InsertAsync(model);
@@ -74,7 +107,7 @@ namespace API.Controllers
                 Messages = new string[] { result ? "Thêm từ vựng thành công." : "Thêm từ vựng thất bại." }              
             });
         }
-        [HttpPost("Action")]
+        [HttpPost("[Action]")]
         public async Task<IActionResult> InsertRange(IList<WordModel> models)
         {
             var result = await wordServices.InsertRangeAsync(models);

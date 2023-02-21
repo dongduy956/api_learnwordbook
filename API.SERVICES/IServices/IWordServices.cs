@@ -11,6 +11,7 @@ namespace API.SERVICES.IServices
     {
         Task<WordModel?> GetAsync(int id);
         IQueryable<WordModel> GetAll();
+        IQueryable<WordModel> GetWordsByTopicId(int topicId);
         IQueryable<WordModel> Searchs(string q="");
         Task<bool> InsertAsync(WordModel model);
         Task<bool> InsertRangeAsync(IList<WordModel> models);

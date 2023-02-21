@@ -66,6 +66,11 @@ namespace API.SERVICES.Services
             };
         }
 
+        public IQueryable<WordModel> GetWordsByTopicId(int topicId)
+        {
+            return GetAll().Where(x => x.TopicId == topicId);
+        }
+
         public async Task<bool> InsertAsync(WordModel model)
         {
             var word = new Word

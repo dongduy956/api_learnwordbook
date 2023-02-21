@@ -22,24 +22,15 @@ namespace API.Controllers
             this.topicServices = topicServices;
         }
         [HttpGet("[Action]")]
-        public IActionResult GetAll(int? page, int? pageSize)
-        {
-            if (!page.HasValue)
-                page = 1;
-            if (!pageSize.HasValue)
-                pageSize = PagingConfig.PageSize;
+        public IActionResult GetAll()
+        {            
             var result = topicServices.GetAll()
-                                      .OrderByDescending(x => x.Id)
-                                      .ToPagedList(page.Value, pageSize.Value);
-            return Ok(new ResponseAPIPaging
+                                      .OrderByDescending(x => x.Id);
+            return Ok(new ResponseAPI
             {
                 StatusCode = Ok().StatusCode,
                 IsSuccess = true,
-                Data = result,
-                PageCount = result.PageCount,
-                PageSize = pageSize.Value,
-                PageNumber = result.PageNumber,
-                TotalItems = result.TotalItemCount
+                Data = result,                
             });
         }
         [HttpGet("[Action]")]
@@ -63,7 +54,7 @@ namespace API.Controllers
                 TotalItems = result.TotalItemCount
             });
         }
-        [HttpPost("Action")]
+        [HttpPost("[Action]")]
         public async Task<IActionResult> Insert(TopicModel model)
         {
             var result = await topicServices.InsertAsync(model);
@@ -74,7 +65,7 @@ namespace API.Controllers
                 Messages = new string[] { result ? "Thêm chủ đề thành công." : "Thêm chủ đề thất bại." }
             });
         }
-        [HttpPost("Action")]
+        [HttpPost("[Action]")]
         public async Task<IActionResult> InsertRange(IList<TopicModel> models)
         {
             var result = await topicServices.InsertRangeAsync(models);
@@ -85,6 +76,7 @@ namespace API.Controllers
                 Messages = new string[] { result ? "Thêm chủ đề thành công." : "Thêm chủ đề thất bại." }
             });
         }
+
         [HttpDelete("[Action]/{id}")]
         public async Task<IActionResult> Detele(int id)
         {
