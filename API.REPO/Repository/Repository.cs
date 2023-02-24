@@ -118,7 +118,8 @@ namespace API.REPO.Repository
 
         public async Task<bool> UpdateRangeAsync(IEnumerable<T> lstEntity)
         {
-            context.Entry(lstEntity).State = EntityState.Modified;
+            //context.Entry(lstEntity).State = EntityState.Modified;
+            context.UpdateRange(lstEntity);
             await SavechangesAsync();
             return true;
         }

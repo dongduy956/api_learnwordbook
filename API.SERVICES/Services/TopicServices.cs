@@ -20,7 +20,7 @@ namespace API.SERVICES.Services
             this.repository = repository;
         }
 
-        public async Task<bool> DeteleAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var model = await repository.GetAsync(id);
             if (model == null)
@@ -80,7 +80,7 @@ namespace API.SERVICES.Services
             return result;
         }
 
-        public IQueryable<TopicModel> Searchs(string q = "")
+        public IQueryable<TopicModel> Search(string q = "")
         {
             q = q.ToLower().Trim();
             return repository.GetAll(SelectEnum.Select.NONTRASH)
@@ -100,8 +100,7 @@ namespace API.SERVICES.Services
             if (topic == null)
                 return false;
             topic.Name = model.Name;
-            var result = await repository.UpdateAsync(topic);
-            return result;
+            return await repository.UpdateAsync(topic);
         }
     }
 }

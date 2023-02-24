@@ -17,6 +17,7 @@ namespace API.Helpers
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IWordServices, WordServices>();
             services.AddScoped<ITopicServices, TopicServices>();
+            services.AddScoped<ILearnedWordServices, LearnedWordServices>();
         }
     }
 }

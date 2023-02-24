@@ -34,15 +34,15 @@ namespace API.Controllers
             });
         }
         [HttpGet("[Action]")]
-        public IActionResult GetAllPaging(int? page, int? pageSize)
+        public async Task<IActionResult> GetAllPaging(int? page, int? pageSize)
         {
             if (!page.HasValue)
                 page = 1;
             if (!pageSize.HasValue)
                 pageSize = PagingConfig.PageSize;
-            var result = wordServices.GetAll()
+            var result =await wordServices.GetAll()
                                       .OrderByDescending(x => x.Id)
-                                      .ToPagedList(page.Value, pageSize.Value);
+                                      .ToPagedListAsync(page.Value, pageSize.Value);
             return Ok(new ResponseAPIPaging
             {
                 StatusCode = Ok().StatusCode,
@@ -55,15 +55,27 @@ namespace API.Controllers
             });
         }
         [HttpGet("[Action]")]
-        public IActionResult GetWordsByTopicId(int topicId,int? page, int? pageSize)
+        public IActionResult GetWordsByTopicId(int topicId)
         {
-            if (!page.HasValue)
-                page = 1;
-            if (!pageSize.HasValue)
-                pageSize = PagingConfig.PageSize;
             var result = wordServices.GetWordsByTopicId(topicId)
+                                      .OrderByDescending(x => x.Id);
+            return Ok(new ResponseAPI
+            {
+                StatusCode = Ok().StatusCode,
+                IsSuccess = true,
+                Data = result,               
+            });
+        }
+        [HttpGet("[Action]")]
+        public async Task<IActionResult> GetWordsByTopicIdPaging(int topicId,int? page, int? pageSize)
+        {
+            if (!page.HasValue)
+                page = 1;
+            if (!pageSize.HasValue)
+                pageSize = PagingConfig.PageSize;
+            var result =await wordServices.GetWordsByTopicId(topicId)
                                       .OrderByDescending(x => x.Id)
-                                      .ToPagedList(page.Value, pageSize.Value);
+                                      .ToPagedListAsync(page.Value, pageSize.Value);
             return Ok(new ResponseAPIPaging
             {
                 StatusCode = Ok().StatusCode,
@@ -76,15 +88,15 @@ namespace API.Controllers
             });
         }
         [HttpGet("[Action]")]
-        public IActionResult Searchs(string q, int? page, int? pageSize)
+        public async Task<IActionResult> Search(string q, int? page, int? pageSize)
         {
             if (!page.HasValue)
                 page = 1;
             if (!pageSize.HasValue)
                 pageSize = PagingConfig.PageSize;
-            var result = wordServices.Searchs(q)
+            var result =await wordServices.Search(q)
                                       .OrderByDescending(x => x.Id)
-                                      .ToPagedList(page.Value, pageSize.Value);
+                                      .ToPagedListAsync(page.Value, pageSize.Value);
             return Ok(new ResponseAPIPaging
             {
                 StatusCode = Ok().StatusCode,
@@ -102,6 +114,7 @@ namespace API.Controllers
             var result = await wordServices.InsertAsync(model);
             return Ok(new ResponseAPI
             {
+                StatusCode = result ? Ok().StatusCode : BadRequest().StatusCode,
                 IsSuccess = result,
                 Data = result,
                 Messages = new string[] { result ? "Thêm từ vựng thành công." : "Thêm từ vựng thất bại." }              
@@ -113,20 +126,34 @@ namespace API.Controllers
             var result = await wordServices.InsertRangeAsync(models);
             return Ok(new ResponseAPI
             {
+                StatusCode = result ? Ok().StatusCode : BadRequest().StatusCode,
                 IsSuccess = result,
                 Data = result,
                 Messages = new string[] { result ? "Thêm từ vựng thành công." : "Thêm từ vựng thất bại." }
             });
         }
         [HttpDelete("[Action]/{id}")]
-        public async Task<IActionResult> Detele(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = await wordServices.DeteleAsync(id);
+            var result = await wordServices.DeleteAsync(id);
             return Ok(new ResponseAPI
             {
+                StatusCode = result ? Ok().StatusCode : BadRequest().StatusCode,
                 IsSuccess = result,
                 Data = result,
                 Messages = new string[] { result ? "Xoá từ vựng thành công." : "Xoá từ vựng thất bại." }
+            });
+        }
+        [HttpPut("[Action]/{id}")]
+        public async Task<IActionResult> Update(int id,WordModel model)
+        {
+            var result = await wordServices.UpdateAsync(id,model);
+            return Ok(new ResponseAPI
+            {
+                StatusCode=result?Ok().StatusCode:BadRequest().StatusCode,
+                IsSuccess = result,
+                Data = result,
+                Messages = new string[] { result ? "Sửa từ vựng thành công." : "Sửa từ vựng thất bại." }
             });
         }
     }

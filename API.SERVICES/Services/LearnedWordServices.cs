@@ -19,9 +19,10 @@ namespace API.SERVICES.Services
         {
             this.repository = repository;
         }
-        public IQueryable<LearnedWordModel> GetAll()
+        public IQueryable<LearnedWordModel> GetAll(int accountId)
         {
             return repository.GetAll(SelectEnum.Select.NONTRASH)
+                              .Where(x=>x.AccountId==accountId)
                               .Include(x => x.Account)
                                     .ThenInclude(x => x.User)
                               .Include(x => x.Word)
@@ -32,7 +33,7 @@ namespace API.SERVICES.Services
                                   CreateAt = x.CreateAt,
                                   CreateBy = x.CreateBy,
                                   Id = x.Id,
-                                  Fullname = x.Account.User.FullName,
+                                  FullName = x.Account.User.FullName,
                                   WordId = x.WordId,
                                   WordModel = new WordModel
                                   {
@@ -49,10 +50,41 @@ namespace API.SERVICES.Services
                               });
         }
 
-        public IQueryable<LearnedWordModel> Searchs(string q = "")
+        public IQueryable<LearnedWordModel> GetAllIncorrect(int accountId)
+        {
+            return GetAll(accountId).Where(x => !x.Correct);
+        }
+
+        public async Task<bool> InsertRangeAsync(IList<LearnedWordModel> models)
+        {
+            var learnedWords = new List<LearnedWord>();
+            foreach (var model in models)
+            {
+                learnedWords.Add(new LearnedWord
+                {
+                    CreateBy = model.CreateBy,
+                    AccountId = model.AccountId,
+                    Correct = model.Correct,
+                    WordId = model.WordId,
+                });
+            }
+            var result = await repository.InsertRangeAsync(learnedWords);
+            if (result)
+            {
+                for (int i = 0; i < models.Count; i++)
+                {
+                    models[i].Id = learnedWords[i].Id;
+                    models[i].CreateAt = learnedWords[i].CreateAt;
+                }
+            }
+            return result;
+        }
+
+        public IQueryable<LearnedWordModel> Search(int accountId,string q = "")
         {
             q = q.ToLower().Trim();
             return repository.GetAll(SelectEnum.Select.NONTRASH)
+                               .Where(x=>x.AccountId==accountId)
                                .Include(x => x.Account)
                                      .ThenInclude(x => x.User)
                                .Include(x => x.Word)
@@ -67,7 +99,7 @@ namespace API.SERVICES.Services
                                    CreateAt = x.CreateAt,
                                    CreateBy = x.CreateBy,
                                    Id = x.Id,
-                                   Fullname = x.Account.User.FullName,
+                                   FullName = x.Account.User.FullName,
                                    WordId = x.WordId,
                                    WordModel = new WordModel
                                    {
@@ -82,6 +114,23 @@ namespace API.SERVICES.Services
                                        CreateBy = x.Word.CreateBy,
                                    }
                                });
+        }
+
+        public async Task<bool> UpdateRangeAsync(IList<LearnedWordModel> models)
+        {
+            var list = new List<LearnedWord>();
+            foreach (var model in models)
+            {
+                var result = await repository.GetAsync(model.Id);
+                if (result != null)
+                {
+                    result.Correct = model.Correct;
+                    list.Add(result);
+                }
+            }
+            if (list.Count == 0)
+                return false;
+            return await repository.UpdateRangeAsync(list);
         }
     }
 }

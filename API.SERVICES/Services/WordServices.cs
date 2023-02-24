@@ -20,7 +20,7 @@ namespace API.SERVICES.Services
             this.repository = repository;
         }
 
-        public async Task<bool> DeteleAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var model = await repository.GetAsync(id);
             if (model == null)
@@ -118,7 +118,7 @@ namespace API.SERVICES.Services
             return result;
         }
 
-        public IQueryable<WordModel> Searchs(string q = "")
+        public IQueryable<WordModel> Search(string q = "")
         {
             q = q.ToLower().Trim();
             return repository.GetAll(SelectEnum.Select.NONTRASH)

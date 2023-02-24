@@ -10,10 +10,10 @@ namespace API.SERVICES.IServices
     public interface ITopicServices
     {
         IQueryable<TopicModel> GetAll();
-        IQueryable<TopicModel> Searchs(string q="");
+        IQueryable<TopicModel> Search(string q="");
         Task<bool> InsertAsync(TopicModel model);
         Task<bool> InsertRangeAsync(IList<TopicModel> models);
-        Task<bool> DeteleAsync(int id);
+        Task<bool> DeleteAsync(int id);
         Task<bool> UpdateAsync(int id, TopicModel model);
 
     }

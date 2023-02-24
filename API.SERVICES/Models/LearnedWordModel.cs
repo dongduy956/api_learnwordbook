@@ -10,7 +10,7 @@ namespace API.SERVICES.Models
    public class LearnedWordModel:BaseModel
     {
         public int AccountId { get; set; }
-        public string? Fullname { get; set; }
+        public string? FullName { get; set; }
         public int WordId { get; set; }
         public WordModel? WordModel  { get; set; }
         public bool Correct { get; set; }

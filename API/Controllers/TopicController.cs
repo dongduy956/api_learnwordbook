@@ -22,27 +22,48 @@ namespace API.Controllers
             this.topicServices = topicServices;
         }
         [HttpGet("[Action]")]
+        public async Task<IActionResult> GetAllPaging(int? page, int? pageSize)
+        {
+            if (!page.HasValue)
+                page = 1;
+            if (!pageSize.HasValue)
+                pageSize = PagingConfig.PageSize;
+            var result = await topicServices.GetAll()
+                                      .OrderByDescending(x => x.Id)
+                                      .ToPagedListAsync(page.Value, pageSize.Value);
+            return Ok(new ResponseAPIPaging
+            {
+                StatusCode = Ok().StatusCode,
+                IsSuccess = true,
+                Data = result,
+                PageSize = result.PageSize,
+                PageCount = result.PageCount,
+                PageNumber = result.PageNumber,
+                TotalItems = result.TotalItemCount
+            });
+        }
+        [HttpGet("[Action]")]
         public IActionResult GetAll()
-        {            
+        {
             var result = topicServices.GetAll()
                                       .OrderByDescending(x => x.Id);
             return Ok(new ResponseAPI
             {
                 StatusCode = Ok().StatusCode,
                 IsSuccess = true,
-                Data = result,                
+                Data = result,
             });
         }
         [HttpGet("[Action]")]
-        public IActionResult Searchs(string q, int? page, int? pageSize)
+        public async Task<IActionResult> Search(string q, int? page, int? pageSize)
         {
             if (!page.HasValue)
                 page = 1;
             if (!pageSize.HasValue)
                 pageSize = PagingConfig.PageSize;
-            var result = topicServices.Searchs(q)
+            var result =await topicServices.Search(q)
                                       .OrderByDescending(x => x.Id)
-                                      .ToPagedList(page.Value, pageSize.Value);
+                                      .ToPagedListAsync(page.Value, pageSize.Value);
             return Ok(new ResponseAPIPaging
             {
                 StatusCode = Ok().StatusCode,
@@ -60,6 +81,7 @@ namespace API.Controllers
             var result = await topicServices.InsertAsync(model);
             return Ok(new ResponseAPI
             {
+                StatusCode = result ? Ok().StatusCode : BadRequest().StatusCode,
                 IsSuccess = result,
                 Data = result,
                 Messages = new string[] { result ? "Thêm chủ đề thành công." : "Thêm chủ đề thất bại." }
@@ -71,6 +93,7 @@ namespace API.Controllers
             var result = await topicServices.InsertRangeAsync(models);
             return Ok(new ResponseAPI
             {
+                StatusCode = result ? Ok().StatusCode : BadRequest().StatusCode,
                 IsSuccess = result,
                 Data = result,
                 Messages = new string[] { result ? "Thêm chủ đề thành công." : "Thêm chủ đề thất bại." }
@@ -78,14 +101,27 @@ namespace API.Controllers
         }
 
         [HttpDelete("[Action]/{id}")]
-        public async Task<IActionResult> Detele(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = await topicServices.DeteleAsync(id);
+            var result = await topicServices.DeleteAsync(id);
             return Ok(new ResponseAPI
             {
+                StatusCode = result ? Ok().StatusCode : BadRequest().StatusCode,
                 IsSuccess = result,
                 Data = result,
                 Messages = new string[] { result ? "Xoá chủ đề thành công." : "Xoá chủ đề thất bại." }
+            });
+        }
+        [HttpPut("[Action]/{id}")]
+        public async Task<IActionResult> Update(int id,TopicModel model)
+        {
+            var result = await topicServices.UpdateAsync(id,model);
+            return Ok(new ResponseAPI
+            {
+                StatusCode = result ? Ok().StatusCode : BadRequest().StatusCode,
+                IsSuccess = result,
+                Data = result,
+                Messages = new string[] { result ? "Sửa chủ đề thành công." : "Sửa chủ đề thất bại." }
             });
         }
     }
