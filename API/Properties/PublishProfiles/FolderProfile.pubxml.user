@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <_PublishTargetUrl>E:\projects\LearnWordbook\publish</_PublishTargetUrl>
-    <History>True|2023-02-24T02:14:56.5341520Z;True|2023-02-24T09:12:50.2398647+07:00;True|2023-02-24T09:09:45.8850029+07:00;True|2023-02-24T09:07:05.9187835+07:00;True|2023-02-24T09:04:58.6935112+07:00;True|2023-02-24T08:59:46.4178880+07:00;False|2023-02-24T08:58:42.8481852+07:00;True|2023-02-24T00:40:42.0508121+07:00;True|2023-02-24T00:14:48.7378964+07:00;</History>
+    <History>True|2023-02-25T05:39:35.0590540Z;True|2023-02-24T09:14:56.5341520+07:00;True|2023-02-24T09:12:50.2398647+07:00;True|2023-02-24T09:09:45.8850029+07:00;True|2023-02-24T09:07:05.9187835+07:00;True|2023-02-24T09:04:58.6935112+07:00;True|2023-02-24T08:59:46.4178880+07:00;False|2023-02-24T08:58:42.8481852+07:00;True|2023-02-24T00:40:42.0508121+07:00;True|2023-02-24T00:14:48.7378964+07:00;</History>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
   </PropertyGroup>
   <ItemGroup>

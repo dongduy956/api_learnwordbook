@@ -99,7 +99,8 @@ namespace API.REPO.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     WordId = table.Column<int>(type: "int", nullable: false),
-                    Correct = table.Column<bool>(type: "bit", nullable: false),
+                    Rand = table.Column<int>(type: "int", nullable: false),
+                    Input = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsTrash = table.Column<bool>(type: "bit", nullable: false)
@@ -152,12 +153,12 @@ namespace API.REPO.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Avatar", "CreateAt", "CreateBy", "Email", "FullName", "IsTrash" },
-                values: new object[] { 1, "", new DateTime(2023, 2, 20, 11, 10, 12, 121, DateTimeKind.Local).AddTicks(5132), "", "admin.learn-wordbook@gmail.com", "Learn wordbook", false });
+                values: new object[] { 1, "", new DateTime(2023, 2, 25, 22, 1, 7, 739, DateTimeKind.Local).AddTicks(8636), "", "admin.learn-wordbook@gmail.com", "Learn wordbook", false });
 
             migrationBuilder.InsertData(
                 table: "Accounts",
                 columns: new[] { "Id", "CreateAt", "CreateBy", "IsTrash", "Password", "UserId", "Username" },
-                values: new object[] { 1, new DateTime(2023, 2, 20, 11, 10, 12, 125, DateTimeKind.Local).AddTicks(2396), "", false, "21232f297a57a5a743894a0e4a801fc3", 1, "admin" });
+                values: new object[] { 1, new DateTime(2023, 2, 25, 22, 1, 7, 742, DateTimeKind.Local).AddTicks(91), "", false, "21232f297a57a5a743894a0e4a801fc3", 1, "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_UserId",

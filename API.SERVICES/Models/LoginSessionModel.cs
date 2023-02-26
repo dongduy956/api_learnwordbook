@@ -15,6 +15,7 @@ namespace API.SERVICES.Models
         public string IPAddress { get; set; }
         public DateTime Expired { get; set; }
         public bool IsRevoked { get; set; }
-        public int AccountId { get; set; }       
+        public int AccountId { get; set; }     
+        public bool IsExpired { get; set; }
     }
 }

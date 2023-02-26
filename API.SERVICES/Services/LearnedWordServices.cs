@@ -29,9 +29,11 @@ namespace API.SERVICES.Services
                               .Select(x => new LearnedWordModel
                               {
                                   AccountId = x.AccountId,
-                                  Correct = x.Correct,
+                                  Input=x.Input,
+                                  Rand=x.Rand,
                                   CreateAt = x.CreateAt,
                                   CreateBy = x.CreateBy,
+                                  Correct=x.Correct,
                                   Id = x.Id,
                                   FullName = x.Account.User.FullName,
                                   WordId = x.WordId,
@@ -52,7 +54,7 @@ namespace API.SERVICES.Services
 
         public IQueryable<LearnedWordModel> GetAllIncorrect(int accountId)
         {
-            return GetAll(accountId).Where(x => !x.Correct);
+            return GetAll(accountId).ToList().Where(x => !x.Correct).AsQueryable();
         }
 
         public async Task<bool> InsertRangeAsync(IList<LearnedWordModel> models)
@@ -64,10 +66,12 @@ namespace API.SERVICES.Services
                 {
                     CreateBy = model.CreateBy,
                     AccountId = model.AccountId,
-                    Correct = model.Correct,
+                    Input=model.Input,
+                    Rand=model.Rand,
                     WordId = model.WordId,
                 });
             }
+            
             var result = await repository.InsertRangeAsync(learnedWords);
             if (result)
             {
@@ -95,12 +99,14 @@ namespace API.SERVICES.Services
                                .Select(x => new LearnedWordModel
                                {
                                    AccountId = x.AccountId,
-                                   Correct = x.Correct,
+                                   Correct = x.Correct,                                   
                                    CreateAt = x.CreateAt,
                                    CreateBy = x.CreateBy,
                                    Id = x.Id,
                                    FullName = x.Account.User.FullName,
                                    WordId = x.WordId,
+                                   Rand=x.Rand,
+                                   Input=x.Input,
                                    WordModel = new WordModel
                                    {
                                        Id = x.Word.Id,
@@ -124,7 +130,8 @@ namespace API.SERVICES.Services
                 var result = await repository.GetAsync(model.Id);
                 if (result != null)
                 {
-                    result.Correct = model.Correct;
+                    result.Input = model.Input;
+                    result.Rand = model.Rand;
                     list.Add(result);
                 }
             }

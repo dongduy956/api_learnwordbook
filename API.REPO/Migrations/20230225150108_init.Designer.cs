@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.REPO.Migrations
 {
     [DbContext(typeof(LearnWordBookContext))]
-    [Migration("20230220041012_init")]
+    [Migration("20230225150108_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,7 +57,7 @@ namespace API.REPO.Migrations
                         new
                         {
                             Id = 1,
-                            CreateAt = new DateTime(2023, 2, 20, 11, 10, 12, 125, DateTimeKind.Local).AddTicks(2396),
+                            CreateAt = new DateTime(2023, 2, 25, 22, 1, 7, 742, DateTimeKind.Local).AddTicks(91),
                             CreateBy = "",
                             IsTrash = false,
                             Password = "21232f297a57a5a743894a0e4a801fc3",
@@ -76,17 +76,20 @@ namespace API.REPO.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Correct")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreateBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Input")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsTrash")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Rand")
+                        .HasColumnType("int");
 
                     b.Property<int>("WordId")
                         .HasColumnType("int");
@@ -210,7 +213,7 @@ namespace API.REPO.Migrations
                         {
                             Id = 1,
                             Avatar = "",
-                            CreateAt = new DateTime(2023, 2, 20, 11, 10, 12, 121, DateTimeKind.Local).AddTicks(5132),
+                            CreateAt = new DateTime(2023, 2, 25, 22, 1, 7, 739, DateTimeKind.Local).AddTicks(8636),
                             CreateBy = "",
                             Email = "admin.learn-wordbook@gmail.com",
                             FullName = "Learn wordbook",

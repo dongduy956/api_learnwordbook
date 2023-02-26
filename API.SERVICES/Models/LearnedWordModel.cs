@@ -13,6 +13,8 @@ namespace API.SERVICES.Models
         public string? FullName { get; set; }
         public int WordId { get; set; }
         public WordModel? WordModel  { get; set; }
+        public int Rand { get; set; }
+        public string Input { get; set; }
         public bool Correct { get; set; }
     }
 }
