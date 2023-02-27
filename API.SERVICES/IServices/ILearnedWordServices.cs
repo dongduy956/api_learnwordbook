@@ -10,6 +10,7 @@ namespace API.SERVICES.IServices
     public interface ILearnedWordServices
     {
         IQueryable<LearnedWordModel> GetAll(int accountId);
+        IQueryable<LearnedWordModel> GetAll();
         IQueryable<LearnedWordModel> GetAllIncorrect(int accountId);
         IQueryable<LearnedWordModel> Search(int accountId,string q="");
         Task<bool> InsertRangeAsync(IList<LearnedWordModel> models);

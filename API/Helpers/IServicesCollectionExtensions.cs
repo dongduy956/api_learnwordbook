@@ -18,6 +18,7 @@ namespace API.Helpers
             services.AddScoped<IWordServices, WordServices>();
             services.AddScoped<ITopicServices, TopicServices>();
             services.AddScoped<ILearnedWordServices, LearnedWordServices>();
+            services.AddScoped<IStatisticalServices, StatisticalServices>();
         }
     }
 }

@@ -21,19 +21,22 @@ namespace API.SERVICES.Services
         }
         public IQueryable<LearnedWordModel> GetAll(int accountId)
         {
+            return GetAll().Where(x => x.AccountId == accountId);
+        }
+        public IQueryable<LearnedWordModel> GetAll()
+        {
             return repository.GetAll(SelectEnum.Select.NONTRASH)
-                              .Where(x=>x.AccountId==accountId)
                               .Include(x => x.Account)
                                     .ThenInclude(x => x.User)
                               .Include(x => x.Word)
                               .Select(x => new LearnedWordModel
                               {
                                   AccountId = x.AccountId,
-                                  Input=x.Input,
-                                  Rand=x.Rand,
+                                  Input = x.Input,
+                                  Rand = x.Rand,
                                   CreateAt = x.CreateAt,
                                   CreateBy = x.CreateBy,
-                                  Correct=x.Correct,
+                                  Correct = x.Correct,
                                   Id = x.Id,
                                   FullName = x.Account.User.FullName,
                                   WordId = x.WordId,
