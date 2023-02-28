@@ -75,6 +75,7 @@ namespace API.REPO.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsLock = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -153,12 +154,12 @@ namespace API.REPO.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Avatar", "CreateAt", "CreateBy", "Email", "FullName", "IsTrash" },
-                values: new object[] { 1, "", new DateTime(2023, 2, 25, 22, 1, 7, 739, DateTimeKind.Local).AddTicks(8636), "", "admin.learn-wordbook@gmail.com", "Learn wordbook", false });
+                values: new object[] { 1, "", new DateTime(2023, 2, 28, 9, 31, 19, 864, DateTimeKind.Local).AddTicks(8325), "", "admin.learn-wordbook@gmail.com", "Learn wordbook", false });
 
             migrationBuilder.InsertData(
                 table: "Accounts",
                 columns: new[] { "Id", "CreateAt", "CreateBy", "IsTrash", "Password", "UserId", "Username" },
-                values: new object[] { 1, new DateTime(2023, 2, 25, 22, 1, 7, 742, DateTimeKind.Local).AddTicks(91), "", false, "21232f297a57a5a743894a0e4a801fc3", 1, "admin" });
+                values: new object[] { 1, new DateTime(2023, 2, 28, 9, 31, 19, 867, DateTimeKind.Local).AddTicks(1380), "", false, "21232f297a57a5a743894a0e4a801fc3", 1, "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_UserId",

@@ -32,6 +32,11 @@ namespace API.REPO.Migrations
                     b.Property<string>("CreateBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsLock")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<bool>("IsTrash")
                         .HasColumnType("bit");
 
@@ -55,8 +60,9 @@ namespace API.REPO.Migrations
                         new
                         {
                             Id = 1,
-                            CreateAt = new DateTime(2023, 2, 25, 22, 1, 7, 742, DateTimeKind.Local).AddTicks(91),
+                            CreateAt = new DateTime(2023, 2, 28, 9, 31, 19, 867, DateTimeKind.Local).AddTicks(1380),
                             CreateBy = "",
+                            IsLock = false,
                             IsTrash = false,
                             Password = "21232f297a57a5a743894a0e4a801fc3",
                             UserId = 1,
@@ -211,7 +217,7 @@ namespace API.REPO.Migrations
                         {
                             Id = 1,
                             Avatar = "",
-                            CreateAt = new DateTime(2023, 2, 25, 22, 1, 7, 739, DateTimeKind.Local).AddTicks(8636),
+                            CreateAt = new DateTime(2023, 2, 28, 9, 31, 19, 864, DateTimeKind.Local).AddTicks(8325),
                             CreateBy = "",
                             Email = "admin.learn-wordbook@gmail.com",
                             FullName = "Learn wordbook",

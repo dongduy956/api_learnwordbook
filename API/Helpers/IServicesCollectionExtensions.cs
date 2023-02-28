@@ -19,6 +19,11 @@ namespace API.Helpers
             services.AddScoped<ITopicServices, TopicServices>();
             services.AddScoped<ILearnedWordServices, LearnedWordServices>();
             services.AddScoped<IStatisticalServices, StatisticalServices>();
+            services.AddScoped<IJwtServices, JwtServices>();
+            services.AddScoped<ILoginSessionServices, LoginSessionServices>();
+            services.AddScoped<IAccountServices, AccountServices>();
+            services.AddScoped<IUserServices, UserServices>();
+            services.AddHttpContextAccessor();
         }
     }
 }

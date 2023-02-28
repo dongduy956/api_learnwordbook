@@ -2,6 +2,7 @@
 using API.COMMON.Models;
 using API.SERVICES.IServices;
 using API.SERVICES.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +15,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LearnedWordController : ControllerBase
     {
         private readonly ILearnedWordServices learnedWordServices;
@@ -51,7 +53,7 @@ namespace API.Controllers
             if (!page.HasValue)
                 page = 1;
             if (!pageSize.HasValue)
-                pageSize = PagingConfig.PageSize;
+                pageSize = PagingConfigs.PageSize;
             var result =await learnedWordServices.GetAll(accountId)
                                       .OrderByDescending(x => x.Id)
                                       .ToPagedListAsync(page.Value, pageSize.Value);
@@ -72,7 +74,7 @@ namespace API.Controllers
             if (!page.HasValue)
                 page = 1;
             if (!pageSize.HasValue)
-                pageSize = PagingConfig.PageSize;
+                pageSize = PagingConfigs.PageSize;
             var result =await learnedWordServices.Search(accountId,q)
                                       .OrderByDescending(x => x.Id)
                                       .ToPagedListAsync(page.Value, pageSize.Value);

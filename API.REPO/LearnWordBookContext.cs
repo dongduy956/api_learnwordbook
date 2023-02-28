@@ -33,6 +33,9 @@ namespace API.REPO
             modelBuilder.Entity<User>()
                         .Property(x => x.Avatar)
                         .HasDefaultValue("");
+            modelBuilder.Entity<Account>()
+                        .Property(x => x.IsLock)
+                        .HasDefaultValue(false);
         }
         private void InitData(ModelBuilder modelBuilder)
         {
@@ -46,7 +49,8 @@ namespace API.REPO
                     Avatar = "",
                     CreateBy = "",
                     Email = "admin.learn-wordbook@gmail.com",
-                    IsTrash = false
+                    IsTrash = false,
+                    
                }
             };
             modelBuilder.Entity<User>().HasData(users);
@@ -61,7 +65,8 @@ namespace API.REPO
                     Password="21232f297a57a5a743894a0e4a801fc3",
                     CreateAt=DateTime.Now,
                     CreateBy="",
-                    IsTrash=false
+                    IsTrash=false,
+                    IsLock=false,
                 }
             };
             modelBuilder.Entity<Account>().HasData(accounts);

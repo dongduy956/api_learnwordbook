@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace API.COMMON.Configs
 {
-    public class AccountConfig
+    public class AccountConfigs
     {
         public static string DefaultPassword { get; set; }
         public static void AccountConfigurationSettings(IConfiguration configuration)
         {
-            DefaultPassword = configuration["AccountConfig:DefaultPassword"] ?? "12345";
+            DefaultPassword = configuration["AccountConfigs:DefaultPassword"] ?? "12345";
         }
     }
 }

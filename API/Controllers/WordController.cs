@@ -2,6 +2,7 @@
 using API.COMMON.Models;
 using API.SERVICES.IServices;
 using API.SERVICES.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +15,8 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class WordController : ControllerBase
     {
         private readonly IWordServices wordServices;
@@ -39,7 +42,7 @@ namespace API.Controllers
             if (!page.HasValue)
                 page = 1;
             if (!pageSize.HasValue)
-                pageSize = PagingConfig.PageSize;
+                pageSize = PagingConfigs.PageSize;
             var result =await wordServices.GetAll()
                                       .OrderByDescending(x => x.Id)
                                       .ToPagedListAsync(page.Value, pageSize.Value);
@@ -72,7 +75,7 @@ namespace API.Controllers
             if (!page.HasValue)
                 page = 1;
             if (!pageSize.HasValue)
-                pageSize = PagingConfig.PageSize;
+                pageSize = PagingConfigs.PageSize;
             var result =await wordServices.GetWordsByTopicId(topicId)
                                       .OrderByDescending(x => x.Id)
                                       .ToPagedListAsync(page.Value, pageSize.Value);
@@ -93,7 +96,7 @@ namespace API.Controllers
             if (!page.HasValue)
                 page = 1;
             if (!pageSize.HasValue)
-                pageSize = PagingConfig.PageSize;
+                pageSize = PagingConfigs.PageSize;
             var result =await wordServices.Search(q)
                                       .OrderByDescending(x => x.Id)
                                       .ToPagedListAsync(page.Value, pageSize.Value);

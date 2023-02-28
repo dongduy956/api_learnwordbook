@@ -2,6 +2,8 @@ using API.COMMON.Configs;
 using API.Helpers;
 using API.Middlewares;
 using API.REPO;
+using API.SERVICES.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,10 +13,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace API
@@ -34,7 +40,42 @@ namespace API
 
             services.AddControllers();
             #region register config
-            PagingConfig.PagingConfigurationSettings(Configuration);
+            PagingConfigs.PagingConfigurationSettings(Configuration);
+            AccountConfigs.AccountConfigurationSettings(Configuration);
+            JwtConfigs.JwtConfigurationSettings(Configuration);
+            UploadConfigs.UploadConfigurationSettings(Configuration);
+            #endregion
+            #region register jwt
+            var secretBytes = Encoding.UTF8.GetBytes(JwtConfigs.SecretKey);
+            var tokenParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+
+                ValidateLifetime = true,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(secretBytes),
+                ClockSkew=TimeSpan.Zero
+                
+            };
+            services.AddSingleton(tokenParameters);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(opt =>
+                    {
+                        opt.TokenValidationParameters = tokenParameters;
+                        opt.Events = new JwtBearerEvents();
+                        opt.Events.OnTokenValidated = async (context) =>
+                           {
+                               var jwtServices = context.HttpContext.RequestServices.GetService<IJwtServices>();
+                               var jwtToken = context.SecurityToken as JwtSecurityToken;
+                               if (!(jwtServices.IsTokenLive(jwtToken.RawData)))
+                               {
+                                   context.HttpContext.Response.Headers.Remove("Authorization");
+                                   context.Fail("Invalid Token");
+                               }
+                           };
+                    });
             #endregion
             services.AddSwaggerGen(c =>
             {
@@ -71,6 +112,10 @@ namespace API
             {
                 endpoints.MapControllers();
             });
+            //Auto create folder Images in wwwroot
+            if (!Directory.Exists(Path.Combine(env.ContentRootPath + "//wwwroot//", UploadConfigs.Image)))
+                Directory.CreateDirectory(Path.Combine(env.ContentRootPath + "//wwwroot//", UploadConfigs.Image));
+            app.UseStaticFiles();
             app.UseMiddleware<GlobalExceptonHandlingMiddlewares>();
         }
     }

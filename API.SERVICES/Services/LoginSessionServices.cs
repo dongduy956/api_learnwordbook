@@ -18,17 +18,18 @@ namespace API.SERVICES.Services
             this.repository = repository;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(JwtRequest jwtRequest)
         {
-            var model = await repository.GetAsync(id);
+            var model = repository.Where(x => x.AccessToken.Equals(jwtRequest.AccessToken) && x.RefreshToken.Equals(jwtRequest.RefreshToken))
+                                  .FirstOrDefault();
             if (model == null)
                 return false;
             return await repository.DeleteFromTrashAsync(model);
         }
 
-        public LoginSessionModel? Get(string accessToken, string refreshToken)
+        public LoginSessionModel? Get(JwtRequest jwtRequest)
         {
-            var model = repository.Where(x => x.AccessToken.Equals(accessToken) && x.RefreshToken.Equals(refreshToken) && x.IsExpired)
+            var model = repository.Where(x => x.AccessToken.Equals(jwtRequest.AccessToken) && x.RefreshToken.Equals(jwtRequest.RefreshToken))
                                     .FirstOrDefault();
             if (model == null)
                 return null;
@@ -43,8 +44,29 @@ namespace API.SERVICES.Services
                 Id = model.Id,
                 IsRevoked = model.IsRevoked,
                 RefreshToken = model.RefreshToken,
-                TokenId = model.TokenId
+                TokenId = model.TokenId,
+                IsExpired=model.IsExpired,
             };
+        }
+
+        public LoginSessionModel Get(string accessToken)
+        {
+            return repository.Where(x => x.AccessToken.Equals(accessToken))
+                .Select(model => new LoginSessionModel
+                {
+                    AccessToken = model.AccessToken,
+                    AccountId = model.AccountId,
+                    CreateAt = model.CreateAt,
+                    CreateBy = model.CreateBy,
+                    Expired = model.Expired,
+                    IPAddress = model.IPAddress,
+                    Id = model.Id,
+                    IsRevoked = model.IsRevoked,
+                    RefreshToken = model.RefreshToken,
+                    TokenId = model.TokenId,
+                    IsExpired=model.IsExpired
+                })
+                .FirstOrDefault();
         }
 
         public async Task<bool> InsertAsync(LoginSessionModel model)

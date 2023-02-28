@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace API.COMMON.Configs
 {
-    public class PagingConfig
+    public class PagingConfigs
     {
         public static int PageSize { get; set; }
         public static void PagingConfigurationSettings(IConfiguration configuration)
         {
-            PageSize = Convert.ToInt32(configuration["PagingConfig:PageSize"] ?? "1");
+            PageSize = Convert.ToInt32(configuration["PagingConfigs:PageSize"] ?? "1");
         }
     }
 }

@@ -9,8 +9,9 @@ namespace API.SERVICES.IServices
 {
    public interface ILoginSessionServices
     {
-        LoginSessionModel? Get(string accessToken, string refreshToken);
+        LoginSessionModel? Get(JwtRequest jwtRequest);
+        LoginSessionModel? Get(string accessToken);
         Task<bool> InsertAsync(LoginSessionModel model);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(JwtRequest jwtRequest);
     }
 }

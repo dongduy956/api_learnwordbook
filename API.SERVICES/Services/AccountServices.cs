@@ -19,16 +19,17 @@ namespace API.SERVICES.Services
         {
             this.repository = repository;
         }
-        public AccountModel? Get(string username, string password)
+        public AccountModel? Get(LoginRequest loginRequest)
         {
-            password = StringLibrary.PasswordHash(password);
-            var model = repository.Where(x => x.Username.Equals(username) && x.Password.Equals(password))
+            loginRequest.Password = StringLibrary.PasswordHash(loginRequest.Password);
+            var model = repository.Where(x => x.Username.Equals(loginRequest.Username) && x.Password.Equals(loginRequest.Password))
                               .FirstOrDefault();
             if (model == null)
                 return null;
             return new AccountModel
             {
                 Id = model.Id,
+                IsLock = model.IsLock,
                 CreateAt = model.CreateAt,
                 CreateBy = model.CreateBy,
                 Username = model.Username,
@@ -36,10 +37,25 @@ namespace API.SERVICES.Services
             };
 
         }
-
+        public async Task<AccountModel?> Get(int id)
+        {
+            var model = await repository.GetAsync(id);
+            return new AccountModel
+            {
+                Id = model.Id,
+                IsLock = model.IsLock,
+                CreateAt = model.CreateAt,
+                CreateBy = model.CreateBy,
+                Username = model.Username,
+                UserId = model.UserId,
+            };
+        }
         public async Task<bool> InsertAsync(AccountModel model)
         {
-            model.Password = StringLibrary.PasswordHash(AccountConfig.DefaultPassword);
+            var _account = Get(new LoginRequest { Username = model.Username, Password = model.Password });
+            if (_account != null)
+                return false;
+            model.Password = StringLibrary.PasswordHash(AccountConfigs.DefaultPassword);
             var account = new Account
             {
                 CreateBy = model.CreateBy,

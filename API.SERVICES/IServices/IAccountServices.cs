@@ -9,7 +9,8 @@ namespace API.SERVICES.IServices
 {
     public interface IAccountServices
     {
-        AccountModel? Get(string username,string password);
+        Task<AccountModel?> Get(int id);
+        AccountModel? Get(LoginRequest loginRequest);
         Task<bool> InsertAsync(AccountModel model);
 
     }
