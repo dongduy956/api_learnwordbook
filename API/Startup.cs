@@ -6,6 +6,7 @@ using API.SERVICES.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,7 @@ namespace API
             AccountConfigs.AccountConfigurationSettings(Configuration);
             JwtConfigs.JwtConfigurationSettings(Configuration);
             UploadConfigs.UploadConfigurationSettings(Configuration);
+            MailConfigs.MailConfigurationSettings(Configuration);
             #endregion
             #region register jwt
             var secretBytes = Encoding.UTF8.GetBytes(JwtConfigs.SecretKey);
@@ -77,6 +79,7 @@ namespace API
                            };
                     });
             #endregion
+          
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -85,7 +88,7 @@ namespace API
             services.AddDbContext<LearnWordBookContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("LearnWordBookContext"));
-            });
+            });           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,7 +110,6 @@ namespace API
             });
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -116,6 +118,7 @@ namespace API
             if (!Directory.Exists(Path.Combine(env.ContentRootPath + "//wwwroot//", UploadConfigs.Image)))
                 Directory.CreateDirectory(Path.Combine(env.ContentRootPath + "//wwwroot//", UploadConfigs.Image));
             app.UseStaticFiles();
+
             app.UseMiddleware<GlobalExceptonHandlingMiddlewares>();
         }
     }

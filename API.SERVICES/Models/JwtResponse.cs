@@ -10,5 +10,6 @@ namespace API.SERVICES.Models
     {
         public object User { get; set; }
         public int ExpiredTime { get; set; }
+        public string Avatar { get; set; }
     }
 }

@@ -12,5 +12,9 @@ namespace API.SERVICES.Models
         public string? Password { get; set; }
         public bool IsLock { get; set; }
         public int UserId { get; set; }
+        public string? FullName { get; set; }
+        public string? Avatar { get; set; }
+        public string? Code { get; set; }
+
     }
 }

@@ -4,14 +4,16 @@ using API.REPO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.REPO.Migrations
 {
     [DbContext(typeof(LearnWordBookContext))]
-    partial class LearnWordBookContextModelSnapshot : ModelSnapshot
+    [Migration("20230301125413_add-fieldcode-account")]
+    partial class addfieldcodeaccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

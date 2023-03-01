@@ -12,6 +12,9 @@ namespace API.SERVICES.IServices
         Task<AccountModel?> Get(int id);
         AccountModel? Get(LoginRequest loginRequest);
         Task<bool> InsertAsync(AccountModel model);
-
+        Task<int> ChangePassword(int id,ChangePassword model);
+        Task<AccountModel?> GetByUserId(int userId);
+        Task<bool> ForgetPassword(int id,string password);
+        Task<bool> UpdateCode(int id,string code);
     }
 }

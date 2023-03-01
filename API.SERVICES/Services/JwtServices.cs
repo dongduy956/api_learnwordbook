@@ -52,7 +52,7 @@ namespace API.SERVICES.Services
         public bool IsTokenLive(string accessToken)
         {
             var loginSession = loginSessionServices.Get(accessToken);
-            return  !(loginSession == null || loginSession.IsRevoked || loginSession.IsExpired)
+            return !(loginSession == null || loginSession.IsRevoked || loginSession.IsExpired);
         }
 
         public async Task<ResponseAPI> RenewRefreshTokenAsync(int accountId, string ipAddress, JwtRequest jwtRequest)

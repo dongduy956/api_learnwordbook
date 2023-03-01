@@ -23,6 +23,7 @@ namespace API.Helpers
             services.AddScoped<ILoginSessionServices, LoginSessionServices>();
             services.AddScoped<IAccountServices, AccountServices>();
             services.AddScoped<IUserServices, UserServices>();
+            services.AddScoped<IMailServices, MailServices>();
             services.AddHttpContextAccessor();
         }
     }
