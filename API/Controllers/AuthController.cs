@@ -1,10 +1,13 @@
-﻿using API.COMMON.Library;
+﻿using API.COMMON.Configs;
+using API.COMMON.Library;
 using API.COMMON.Models;
 using API.SERVICES.IServices;
 using API.SERVICES.Models;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -58,7 +61,7 @@ namespace API.Controllers
             var result = await jwtServices.RenewRefreshTokenAsync(Convert.ToInt32(accountId), GetIP(), jwtRequest);
             return Ok(result);
         }
-        [HttpGet("[Action]")]
+        [HttpPost("[Action]")]
         public async Task<IActionResult> SendCode(string email)
         {
             var user = await userServices.FindByEmail(email);
@@ -97,7 +100,7 @@ namespace API.Controllers
                 StatusCode = BadRequest().StatusCode
             });
         }
-        [HttpGet("[Action]/{id}")]
+        [HttpPost("[Action]/{id}")]
         public async Task<IActionResult> ConfirmCode(int id, string code)
         {
             var account = await accountServices.Get(id);
@@ -157,6 +160,54 @@ namespace API.Controllers
                 Messages = new string[] { message }
             });
         }
+        [HttpPost("[Action]")]
+        public async Task<IActionResult> GoogleLogin(UserModel model)
+        {
+            var accountExist = await accountServices.FindAccountGoogle(model.Email);
+            var result = false;
+            if (accountExist != null)
+            {
+                result = await userServices.UpdateAsync(accountExist.UserId, model);
+                if (result)
+                {
+                    var response = await jwtServices.GetTokenAsync(new LoginRequest
+                    {
+                        Username = accountExist.Username
+                    }, GetIP(), 1);
+                    return Ok(response);
+                }
+            }
+            result = await userServices.InsertAsync(model);
+            if (result)
+            {
+                var password = StringLibrary.PasswordHash(AccountConfigs.DefaultPassword);
+                var account = new AccountModel
+                {
+                    Username = model.Email,
+                    IsLock = false,
+                    Password = password,
+                    UserId = model.Id,
+                    Social = 1
+                };
+                result = await accountServices.InsertAsync(account);
+                if (result)
+                {
+                    var response = await jwtServices.GetTokenAsync(new LoginRequest
+                    {
+                        Username = account.Username
+                    }, GetIP(), 1);
+                    return Ok(response);
+                }
+            }
+            return Ok(new ResponseAPI
+            {
+                IsSuccess = false,
+                StatusCode = BadRequest().StatusCode,
+                Messages = new string[] { "Có lỗi xảy ra." }
+            });
+        }
+
+
         private string? GetIP()
         {
             if (!string.IsNullOrEmpty(HttpContext.Request.Headers["X-Forwarded-For"]))

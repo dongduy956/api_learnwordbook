@@ -16,5 +16,6 @@ namespace API.SERVICES.IServices
         Task<AccountModel?> GetByUserId(int userId);
         Task<bool> ForgetPassword(int id,string password);
         Task<bool> UpdateCode(int id,string code);
+        Task<AccountModel?> FindAccountGoogle(string username);
     }
 }

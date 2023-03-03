@@ -26,9 +26,12 @@ namespace API.SERVICES.Services
             this.loginSessionServices = loginSessionServices;
         }
 
-        public async Task<ResponseAPI> GetTokenAsync(LoginRequest loginRequest, string ipAddress)
+        public async Task<ResponseAPI> GetTokenAsync(LoginRequest loginRequest, string ipAddress, int social = 0)
         {
-            var account = accountServices.Get(loginRequest);
+            var account = new AccountModel();
+            if (social == 0)
+                account = accountServices.Get(loginRequest);
+            else account = await accountServices.FindAccountGoogle(loginRequest.Username);
             if (account == null)
                 return new ResponseAPI
                 {
@@ -95,10 +98,11 @@ namespace API.SERVICES.Services
         public async Task<ResponseAPI> RevokeRefreshTokenAsync(JwtRequest jwtRequest)
         {
             if (await loginSessionServices.DeleteAsync(jwtRequest))
-                return new ResponseAPI { 
-                    IsSuccess=true,
-                    StatusCode=(int)HttpStatusCode.OK,
-                    Messages=new string[] {"Xoá thành công."}
+                return new ResponseAPI
+                {
+                    IsSuccess = true,
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Messages = new string[] { "Xoá thành công." }
                 };
             return new ResponseAPI
             {

@@ -51,6 +51,29 @@ namespace API.SERVICES.Services
 
         }
 
+        public async Task<AccountModel?> FindAccountGoogle(string username)
+        {
+            var account = await repository.Where(x => x.Username.Equals(username) && x.Social == 1)
+                                          .Include(x=>x.User)
+                                          .FirstOrDefaultAsync();
+            if (account == null)
+                return null;
+            return new AccountModel
+            {
+                Id = account.Id,
+                Code = account.Code,
+                CreateAt = account.CreateAt,
+                CreateBy = account.CreateBy,
+                IsLock = account.IsLock,
+                Password = account.Password,
+                Social = account.Social,
+                UserId = account.UserId,
+                Username = account.Username,
+                Avatar=account.User.Avatar,
+                FullName=account.User.FullName
+            };
+        }
+
         public async Task<bool> ForgetPassword(int id, string password)
         {
             password = StringLibrary.PasswordHash(password);
@@ -81,7 +104,8 @@ namespace API.SERVICES.Services
                 Username = model.Username,
                 UserId = model.UserId,
                 FullName = model.User.FullName,
-                Avatar = $"{myHostUrl}{model.User.Avatar}"
+                Avatar =model.Social==0 ?$"{myHostUrl}{model.User.Avatar}":model.User.Avatar,
+                Social=model.Social
             };
 
         }
@@ -96,7 +120,7 @@ namespace API.SERVICES.Services
                 CreateBy = model.CreateBy,
                 Username = model.Username,
                 UserId = model.UserId,
-                Code=model.Code
+                Code = model.Code
             };
         }
 
@@ -114,8 +138,9 @@ namespace API.SERVICES.Services
                                     Username = model.Username,
                                     UserId = model.UserId,
                                     FullName = model.User.FullName,
-                                    Avatar = $"{myHostUrl}{model.User.Avatar}",
-                                    Code=model.Code
+                                    Avatar =model.Social==0? $"{myHostUrl}{model.User.Avatar}":model.User.Avatar,
+                                    Code = model.Code,
+                                    Social=model.Social
                                 })
                                 .SingleOrDefaultAsync(x => x.UserId == userId);
             return model;
@@ -124,17 +149,18 @@ namespace API.SERVICES.Services
         public async Task<bool> InsertAsync(AccountModel model)
         {
             var _account = repository.GetAll(SelectEnum.Select.NONTRASH)
-                                     .SingleOrDefault(x => x.Username.Equals(model.Username.ToLower().Trim()));
+                                     .SingleOrDefault(x => x.Username.Equals(model.Username.ToLower().Trim()) && x.Social == 0);
             if (_account != null)
                 return false;
-            model.Password = StringLibrary.PasswordHash(AccountConfigs.DefaultPassword);
+            model.Password = StringLibrary.PasswordHash(model.Password);
             var account = new Account
             {
                 CreateBy = model.CreateBy,
                 Password = model.Password,
                 UserId = model.UserId,
                 Username = model.Username.ToLower().Trim(),
-                IsLock = false
+                IsLock = false,
+                Social=model.Social
             };
             var result = await repository.InsertAsync(account);
             if (result)
@@ -145,7 +171,7 @@ namespace API.SERVICES.Services
             return result;
         }
 
-        public async Task<bool> UpdateCode(int id,string code)
+        public async Task<bool> UpdateCode(int id, string code)
         {
             var model = await repository.GetAsync(id);
             if (model == null)

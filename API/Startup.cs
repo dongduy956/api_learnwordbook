@@ -46,6 +46,7 @@ namespace API
             JwtConfigs.JwtConfigurationSettings(Configuration);
             UploadConfigs.UploadConfigurationSettings(Configuration);
             MailConfigs.MailConfigurationSettings(Configuration);
+            GoogleConfigs.GoogleConfigurationSettings(Configuration);
             #endregion
             #region register jwt
             var secretBytes = Encoding.UTF8.GetBytes(JwtConfigs.SecretKey);
@@ -58,28 +59,28 @@ namespace API
 
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(secretBytes),
-                ClockSkew=TimeSpan.Zero
-                
+                ClockSkew = TimeSpan.Zero
+
             };
             services.AddSingleton(tokenParameters);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(opt =>
-                    {
-                        opt.TokenValidationParameters = tokenParameters;
-                        opt.Events = new JwtBearerEvents();
-                        opt.Events.OnTokenValidated = async (context) =>
-                           {
-                               var jwtServices = context.HttpContext.RequestServices.GetService<IJwtServices>();
-                               var jwtToken = context.SecurityToken as JwtSecurityToken;
-                               if (!(jwtServices.IsTokenLive(jwtToken.RawData)))
-                               {
-                                   context.HttpContext.Response.Headers.Remove("Authorization");
-                                   context.Fail("Invalid Token");
-                               }
-                           };
-                    });
+                .AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters = tokenParameters;
+                    opt.Events = new JwtBearerEvents();
+                    opt.Events.OnTokenValidated = async (context) =>
+                        {
+                            var jwtServices = context.HttpContext.RequestServices.GetService<IJwtServices>();
+                            var jwtToken = context.SecurityToken as JwtSecurityToken;
+                            if (!(jwtServices.IsTokenLive(jwtToken.RawData)))
+                            {
+                                context.HttpContext.Response.Headers.Remove("Authorization");
+                                context.Fail("Invalid Token");
+                            }
+                        };
+                });
             #endregion
-          
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -88,7 +89,7 @@ namespace API
             services.AddDbContext<LearnWordBookContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("LearnWordBookContext"));
-            });           
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

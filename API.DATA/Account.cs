@@ -19,6 +19,8 @@ namespace API.DATA
         public bool IsLock { get; set; }
         public int UserId { get; set; }
         public string? Code { get; set; }
+        //0:system;1:google;2:facebook
+        public int Social { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; }
         public ICollection<LoginSession> LoginSessions { get; set; }

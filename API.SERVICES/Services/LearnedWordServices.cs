@@ -69,7 +69,7 @@ namespace API.SERVICES.Services
                 {
                     CreateBy = model.CreateBy,
                     AccountId = model.AccountId,
-                    Input=model.Input,
+                    Input=model.Input.Trim().ToLower(),
                     Rand=model.Rand,
                     WordId = model.WordId,
                 });
@@ -133,7 +133,7 @@ namespace API.SERVICES.Services
                 var result = await repository.GetAsync(model.Id);
                 if (result != null)
                 {
-                    result.Input = model.Input;
+                    result.Input = model.Input.Trim().ToLower();
                     result.Rand = model.Rand;
                     list.Add(result);
                 }

@@ -23,7 +23,19 @@ namespace API.DATA
         {
             get
             {
-                return (Rand == 0 && Input.ToLower().Trim().Equals(Word.En.ToLower().Trim())) || (Rand == 1 && Input.ToLower().Trim().Equals(Word.Vi.ToLower().Trim()));
+
+                var result=false;
+                if (Rand == 0)
+                    result = Input.Equals(Word.En);
+                else
+                {                    
+                    var vis = Word.Vi.Split(',').Where(x => !string.IsNullOrEmpty(x) && !string.IsNullOrWhiteSpace(x))
+                                                .Select(x=>x.Trim());
+                    var inputs = Input.Split(',').Where(x => !string.IsNullOrEmpty(x) && !string.IsNullOrWhiteSpace(x))
+                                                .Select(x => x.Trim());
+                    result = vis.Union(inputs).ToArray().Count() == vis.Count();
+                }
+                return result;
             }
         }
     }

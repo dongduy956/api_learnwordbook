@@ -76,11 +76,11 @@ namespace API.SERVICES.Services
             var word = new Word
             {
                 CreateBy = model.CreateBy,
-                En = model.En,
-                Vi = model.Vi,
+                En = model.En.Trim().ToLower(),
+                Vi = model.Vi.Trim().ToLower(),
                 Note = model.Note,
                 TopicId = model.TopicId,
-                Type = model.Type,
+                Type = model.Type.Trim().ToLower(),
             };
             var result = await repository.InsertAsync(word);
             if (result)
@@ -99,11 +99,11 @@ namespace API.SERVICES.Services
                 words.Add(new Word
                 {
                     CreateBy = model.CreateBy,
-                    En = model.En,
-                    Vi = model.Vi,
+                    En = model.En.Trim().ToLower(),
+                    Vi = model.Vi.Trim().ToLower(),
                     Note = model.Note,
                     TopicId = model.TopicId,
-                    Type = model.Type,
+                    Type = model.Type.Trim().ToLower(),
                 });
             }
             var result = await repository.InsertRangeAsync(words);
@@ -146,9 +146,9 @@ namespace API.SERVICES.Services
             var word = await repository.GetAsync(id);
             if (word == null)
                 return false;
-            word.En = model.En;
-            word.Vi = model.Vi;
-            word.Type = model.Type;
+            word.En = model.En.Trim().ToLower();
+            word.Vi = model.Vi.Trim().ToLower();
+            word.Type = model.Type.Trim().ToLower();
             word.Note = model.Note;
             word.TopicId = model.TopicId;
             var result = await repository.UpdateAsync(word);

@@ -77,6 +77,8 @@ namespace API.REPO.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsLock = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Social = table.Column<int>(type: "int", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreateBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsTrash = table.Column<bool>(type: "bit", nullable: false)
@@ -154,12 +156,12 @@ namespace API.REPO.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Avatar", "CreateAt", "CreateBy", "Email", "FullName", "IsTrash" },
-                values: new object[] { 1, "", new DateTime(2023, 2, 28, 9, 31, 19, 864, DateTimeKind.Local).AddTicks(8325), "", "admin.learn-wordbook@gmail.com", "Learn wordbook", false });
+                values: new object[] { 1, "", new DateTime(2023, 3, 2, 13, 49, 40, 456, DateTimeKind.Local).AddTicks(6306), "", "admin.learn-wordbook@gmail.com", "Learn wordbook", false });
 
             migrationBuilder.InsertData(
                 table: "Accounts",
-                columns: new[] { "Id", "CreateAt", "CreateBy", "IsTrash", "Password", "UserId", "Username" },
-                values: new object[] { 1, new DateTime(2023, 2, 28, 9, 31, 19, 867, DateTimeKind.Local).AddTicks(1380), "", false, "21232f297a57a5a743894a0e4a801fc3", 1, "admin" });
+                columns: new[] { "Id", "Code", "CreateAt", "CreateBy", "IsTrash", "Password", "Social", "UserId", "Username" },
+                values: new object[] { 1, null, new DateTime(2023, 3, 2, 13, 49, 40, 458, DateTimeKind.Local).AddTicks(8040), "", false, "21232f297a57a5a743894a0e4a801fc3", 0, 1, "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_UserId",

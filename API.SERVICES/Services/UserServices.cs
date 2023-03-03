@@ -26,19 +26,21 @@ namespace API.SERVICES.Services
             this._httpContextAccessor = _httpContextAccessor;
         }
 
-        public async  Task<UserModel?> FindByEmail(string email)
+        public async Task<UserModel?> FindByEmail(string email)
         {
             myHostUrl = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}";
-            var model =await repository.GetAll(SelectEnum.Select.NONTRASH)
-                            .Where(x => x.Email.Equals(email.Trim().ToLower()))
-                            .Select(model=>new UserModel
+            var model = await repository.GetAll(SelectEnum.Select.NONTRASH)
+                            .Include(x => x.Account)
+                            .Where(x => x.Email.Equals(email.Trim().ToLower()) && x.Account != null && x.Account.Social == 0)
+                            .Select(model => new UserModel
                             {
-                                Avatar = $"{myHostUrl}{model.Avatar}",
+                                Avatar =model.Account.Social==0? $"{myHostUrl}{model.Avatar}":model.Avatar,
                                 CreateAt = model.CreateAt,
                                 CreateBy = model.CreateBy,
                                 Email = model.Email,
                                 FullName = model.FullName,
-                                Id=model.Id
+                                Id = model.Id,
+
                             })
                             .SingleOrDefaultAsync();
             return model;
@@ -62,19 +64,20 @@ namespace API.SERVICES.Services
                 return null;
             return new UserModel
             {
-                Avatar = $"{myHostUrl}{model.Avatar}",
+                Avatar =model.Account.Social==0? $"{myHostUrl}{model.Avatar}":model.Avatar,
                 CreateAt = model.CreateAt,
                 CreateBy = model.CreateBy,
                 Email = model.Email,
                 FullName = model.FullName,
-                Id=model.Id
+                Id = model.Id
             };
         }
 
         public async Task<bool> InsertAsync(UserModel model)
         {
             var _user = repository.GetAll(SelectEnum.Select.NONTRASH)
-                                  .SingleOrDefault(x => x.Email.Equals(model.Email.ToLower().Trim()));
+                                  .Include(x => x.Account)
+                                  .SingleOrDefault(x => x.Email.Equals(model.Email.ToLower().Trim()) && x.Account != null && x.Account.Social == 0);
             if (_user != null)
                 return false;
             var user = new User
@@ -94,13 +97,8 @@ namespace API.SERVICES.Services
         }
         public async Task<bool> UpdateAsync(int id, UserModel model)
         {
-            var _user = repository.GetAll(SelectEnum.Select.NONTRASH)
-                                 .SingleOrDefault(x => x.Email.Equals(model.Email.ToLower().Trim()));
-            if (_user != null)
-                return false;
             var user = await repository.GetAsync(id);
             user.Avatar = model.Avatar;
-            user.Email = model.Email.ToLower().Trim();
             user.FullName = model.FullName;
             return await repository.UpdateAsync(user);
         }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.REPO.Migrations
 {
     [DbContext(typeof(LearnWordBookContext))]
-    [Migration("20230301125413_add-fieldcode-account")]
-    partial class addfieldcodeaccount
+    [Migration("20230302064940_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,6 +48,9 @@ namespace API.REPO.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Social")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -65,11 +68,12 @@ namespace API.REPO.Migrations
                         new
                         {
                             Id = 1,
-                            CreateAt = new DateTime(2023, 3, 1, 19, 54, 11, 699, DateTimeKind.Local).AddTicks(6795),
+                            CreateAt = new DateTime(2023, 3, 2, 13, 49, 40, 458, DateTimeKind.Local).AddTicks(8040),
                             CreateBy = "",
                             IsLock = false,
                             IsTrash = false,
                             Password = "21232f297a57a5a743894a0e4a801fc3",
+                            Social = 0,
                             UserId = 1,
                             Username = "admin"
                         });
@@ -222,7 +226,7 @@ namespace API.REPO.Migrations
                         {
                             Id = 1,
                             Avatar = "",
-                            CreateAt = new DateTime(2023, 3, 1, 19, 54, 11, 696, DateTimeKind.Local).AddTicks(8281),
+                            CreateAt = new DateTime(2023, 3, 2, 13, 49, 40, 456, DateTimeKind.Local).AddTicks(6306),
                             CreateBy = "",
                             Email = "admin.learn-wordbook@gmail.com",
                             FullName = "Learn wordbook",

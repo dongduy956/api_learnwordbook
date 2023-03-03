@@ -11,7 +11,7 @@ namespace API.SERVICES.IServices
 {
     public interface IJwtServices
     {
-        Task<ResponseAPI> GetTokenAsync(LoginRequest loginRequest,string ipAddress);
+        Task<ResponseAPI> GetTokenAsync(LoginRequest loginRequest,string ipAddress,int social=0);
         Task<ResponseAPI> RenewRefreshTokenAsync(int accountId, string ipAddress, JwtRequest jwtRequest);
         JwtSecurityToken? GetSecurityToken(string accsessToken);
         Task<ResponseAPI> RevokeRefreshTokenAsync(JwtRequest jwtRequest);

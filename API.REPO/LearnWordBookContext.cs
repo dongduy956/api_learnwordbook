@@ -67,6 +67,8 @@ namespace API.REPO
                     CreateBy="",
                     IsTrash=false,
                     IsLock=false,
+                    Code=null,
+                    Social=0,
                 }
             };
             modelBuilder.Entity<Account>().HasData(accounts);

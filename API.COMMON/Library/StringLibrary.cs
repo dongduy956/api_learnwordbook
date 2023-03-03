@@ -109,8 +109,8 @@ namespace API.COMMON.Library
                     <body>
                         <div class='body'>
                             <div class='header'>
-                                <h1>Công ty nón bảo hiểm việt tin</h1>
-                                <h4>Mã xác nhận lấy lại mật khẩu tài khoản" + username + @"</h4>
+                                <h1>Trang học từ vựng qua chủ đề</h1>
+                                <h4>Mã xác nhận lấy lại mật khẩu tài khoản " + username + @"</h4>
                             </div>
                             <p>Chào bạn " + username + @",</p>
                             <p>Đây là mã xác nhận kích hoạt tài khoản của bạn. Vui lòng không cung cấp cho người khác.</p>
@@ -120,11 +120,11 @@ namespace API.COMMON.Library
                             </div>
 
                             <p>Nếu không phải bạn? Vui lòng bỏ qua email này.</p>
-                            <p>Đã có tài khoản?<a href='https://trainwordbook.web.app/auth'>Đăng nhập tại đây</a></p>
+                            <p>Đã có tài khoản?<a href='https://trainwordbook.firebaseapp.com/auth'>Đăng nhập tại đây</a></p>
                             <p>Xin cảm ơn,</p>
                             <p>learnwordbook@gmail.com</p>
                             <footer class='footer'>
-                                <p>Cảm ơn bạn đã đăng kí tài khoản trên <a href='https://trainwordbook.web.app'>Train wordbook</a></p>
+                                <p>Cảm ơn bạn đã đăng kí tài khoản trên <a href='https://trainwordbook.firebaseapp.com'>trainwordbook</a></p>
                             </footer>
                         </div>
                     </body>
