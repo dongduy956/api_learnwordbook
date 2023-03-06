@@ -111,7 +111,12 @@ namespace API.SERVICES.Services
         }
         public async Task<AccountModel?> Get(int id)
         {
-            var model = await repository.GetAsync(id);
+            myHostUrl = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}";
+            var model = await repository.Where(x=>x.Id==id)
+                                        .Include(x=>x.User)
+                                        .SingleOrDefaultAsync();
+            if (model == null)
+                return null;
             return new AccountModel
             {
                 Id = model.Id,
@@ -120,7 +125,10 @@ namespace API.SERVICES.Services
                 CreateBy = model.CreateBy,
                 Username = model.Username,
                 UserId = model.UserId,
-                Code = model.Code
+                Code = model.Code,
+                FullName = model.User.FullName,
+                Avatar = model.Social == 0 ? $"{myHostUrl}{model.User.Avatar}" : model.User.Avatar,
+                Social = model.Social
             };
         }
 
